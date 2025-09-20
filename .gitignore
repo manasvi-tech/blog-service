@@ -33,3 +33,54 @@ build/
 .vscode/
 
 src/main/resources
+
+
+
+# Compiled class files
+*.class
+
+# Maven / Gradle directories
+/target/
+/build/
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# VSCode
+.vscode/
+
+# Database (local db files)
+/*.h2.db
+*.mv.db
+
+# Environment/secret config
+.env
+*.env
+application-local.properties
+application-prod.properties
+
+# Python/AI integration
+__pycache__/
+*.pyc
+ai-service/venv/
+
+# Others (swap if used)
+*.swp
+*~
+
+
+src/main/resources/application.properties

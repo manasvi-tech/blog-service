@@ -1,13 +1,18 @@
 package com.example.blogservice.entity;
 
+
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
 
+import java.io.Serializable;
+
+
+
 @Entity
 @Data
 @Table(name = "blogs")
-public class Blog {
+public class Blog implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +30,9 @@ public class Blog {
 //    public void setId(Long id) {
 //    }
 
-//    public String getContent() {
-//    }
+    public String getContent() {
+        return this.content;
+    }
+
 }
 
