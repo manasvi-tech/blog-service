@@ -1,4 +1,4 @@
-# Blog Backend API – Spring Boot + JPA (+ AI Summarization) 
+# Blog Backend API – Spring Boot + JPA + Docker + AWS (+ AI Summarization) 
 
 ## Objective
 A backend service using Spring Boot and JPA to let users create, retrieve, update, and manage blogs. Includes a simple AI-powered text summarization feature and is deployable on AWS.
