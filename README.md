@@ -1,7 +1,7 @@
-# Blog Backend API – Spring Boot + JPA + Docker + AWS (+ AI Summarization) 
+# Blog Backend API – Spring Boot + JPA + Docker + AWS + Kuberenetes (+ AI Summarization) 
 
 ## Objective
-A backend service using Spring Boot and JPA to let users create, retrieve, update, and manage blogs. Includes a simple AI-powered text summarization feature and is deployable on AWS.
+A backend service with Spring Boot and JPA for full-featured blog CRUD, pagination, JWT, Redis caching, and AI-powered summarization. Production-ready for AWS (Docker+K8s).
 
 ## Features
 - Full Blog Management (CRUD)  
@@ -28,11 +28,11 @@ A backend service using Spring Boot and JPA to let users create, retrieve, updat
 ## Tech Stack
 - Java 17+ and Spring Boot 3+  
 - Spring Data JPA  
-- PostgreSQL/MySQL (configurable)  
+- PostgreSQL/MySQL 
 - OpenAI API OR Gemini API OR spaCy (microservice) for AI  
-- JUnit & MockMvc (testing)  
 - Docker (deploy/optional)  
-- AWS Ready  
+- Docker, AWS ECR, Kubernetes (EKS)
+- Redis, JWT
 
 ## Quick Start
 
@@ -43,7 +43,7 @@ cd blog-service
 ```
 
 
-### Configure Database
+### 1. Configure Database
 Edit `src/main/resources/application.properties`:
 
 ```
@@ -63,12 +63,13 @@ spring.cache.type=redis
 spring.redis.host=localhost
 spring.redis.port=6379
 
+```
 
-Gemini API
+AI & AWS Keys
+```
 gemini.api.key=<your_gemini_api_key>
 gemini.api.url=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent
 
-AWS S3 integration
 cloud.aws.credentials.access-key=<your_access_key>
 cloud.aws.credentials.secret-key=<your_secret_key>
 cloud.aws.region.static=ap-south-1
@@ -76,60 +77,113 @@ cloud.aws.s3.bucket=your-bucket-name
 
 ```
 
-For MySQL, update the datasource driver and URL accordingly.
-
-### Configure AI Integration
-- For **OpenAI/Gemini**: Set API keys in environment variables or `application.properties`.  
-- For **spaCy**: Start the Python microservice (edit endpoint in Spring config).  
-
-### Install Dependencies, Build, and Run
+### 2. Local Dev & Build
 
 ```
 mvn clean install
 mvn spring-boot:run
 ```
 
-### Try the API!
-**Add a blog:**  
-
+### 3. Docker Build & Local Run
 ```
-curl -X POST http://localhost:8080/api/blogs
--H "Content-Type: application/json"
--d '{"title": "Spring Boot Post", "content": "How Spring Boot simplifies REST development...", "author": "Your Name"}'
-
+docker build -t blog-service:latest .
+docker run -p 8080:8080 blog-service:latest
 ```
 
-**Get a summary for a blog**
+### 4. Push Image to AWS ECR
+Create ECR repo (one time, in AWS Console or CLI)
+You can change the region if you want
+
 ```
-curl -X POST http://localhost:8080/api/ai/summarize/1
+aws ecr create-repository --repository-name blog-service --region us-east-2
 ```
 
-**Register a new user**
+Authenticate Docker to ECR
+(Change the iam user, deploy-user in this case)
 ```
-curl -X POST http://localhost:8080/api/auth/register \
+aws ecr get-login-password --region us-east-2 --profile deploy-user | docker login --username AWS --password-stdin 890742604540.dkr.ecr.us-east-2.amazonaws.com
+```
+
+Tag & Push your Image
+(Replace with your own DNS)
+```
+docker tag blog-backend:latest 890742604540.dkr.ecr.us-east-2.amazonaws.com/blog-service:latest
+docker push 890742604540.dkr.ecr.us-east-2.amazonaws.com/blog-service:latest
+```
+
+### 5. Kubernetes (EKS) Cluster Setup
+(One time) Create EKS cluster:
+```
+eksctl create cluster --name blog-cluster --region us-east-2 --nodes 2 --node-type t3.medium --profile deploy-user
+```
+
+Ensure proper IAM permissions and clean up failed stacks before retrying.
+
+Update kubectl config:
+```
+aws eks --region us-east-2 update-kubeconfig --name blog-cluster --profile deploy-user
+```
+
+Apply deployments/services:
+```
+kubectl get pods
+kubectl get svc
+```
+
+Check Status:
+```
+kubectl get pods
+kubectl get svc
+```
+
+### 7. Real-time Cloud API Access
+
+Access your app using exposed LoadBalancer endpoint:
+
+- Get your public IP:
+    ```
+    kubectl get svc blog-service
+  ```
+- Hit the API (replace <LB_ENDPOINT> with the actual external IP!):
+
+Add a blog:     
+```
+curl -X POST http://<LB_ENDPOINT>:8080/api/blogs \
 -H "Content-Type: application/json" \
--d '{"username": "testuser", "password": "mypassword"}'
+-d '{"title": "Cloud Post", "content": "Spring Boot on AWS EKS", "author": "manasvi"}'
+```
+Get blogs:
+
+```
+curl http://<LB_ENDPOINT>:8080/api/blogs?page=0&size=10
+
 ```
 
-**Login and get JWT**
-
+AI Summary:
 ```
-curl -X POST http://localhost:8080/api/auth/login \
--H "Content-Type: application/json" \
--d '{"username": "testuser", "password": "mypassword"}'
+curl -X POST http://<LB_ENDPOINT>:8080/api/ai/summarize/1
 ```
 
 
-**Dockerization & AWS Deployment**
+Signup/Login:
 ```
-Build Docker Image
-docker build -t blog-backend:latest .
+curl -X POST http://<LB_ENDPOINT>:8080/api/auth/signup --json '{"username":"test","email":"user@mail.com","password":"mypw"}'
+curl -X POST http://<LB_ENDPOINT>:8080/api/auth/login --json '{"username":"test","password":"mypw"}'
 ```
 
-**Run Docker Container**
-```
-docker run -p 8080
-```
+### Configure AI Integration
+- For **OpenAI/Gemini**: Set API keys in environment variables or `application.properties`.  
+- For **spaCy**: Start the Python microservice (edit endpoint in Spring config).  
+
+### 8. Tips & Troubleshooting
+-  If you change config (application.properties), always rebuild your Docker image and push a new tag.
+
+- CrashLoopBackOff?
+    - Check DB/Redis service names and env variables.
+    - kubectl logs <pod> for error messages.
+
+- Scaling:
+    - Edit replicas in your deployment YAML.
 
 
 ## Contributing
