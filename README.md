@@ -186,6 +186,27 @@ curl -X POST http://<LB_ENDPOINT>:8080/api/auth/login --json '{"username":"test"
     - Edit replicas in your deployment YAML.
 
 
+# Demonstration
+
+## Blogs
+
+![Post Blog](Demonstration\postBlog.png)
+
+![Get Blogs](Demonstration\getBlog.png)
+
+![Delete Blogs](Demonstration\deleteBlog.png)
+
+![Summarize Blog](Demonstration\summarizeBlog.png)
+
+## Users
+![Signup User](Demonstration\userSignup.png)
+
+![Login User](Demonstration\userLogin.png)
+
+
+
+
+
 ## Contributing
 
 Contributions are welcome! If you’d like to help improve this project:
