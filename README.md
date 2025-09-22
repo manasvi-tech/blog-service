@@ -211,6 +211,28 @@ curl -X POST http://<LB_ENDPOINT>:8080/api/auth/login --json '{"username":"test"
 ![Login User](Demonstration/userLogin.png)
 
 
+## Future Scope & Planned Improvements
+
+As the project evolves, here are some enhancements that could be implemented to make the blog-service even more robust and user-friendly:
+
+- **CI/CD Pipeline Enhancements:**  
+  Integrate automated unit and integration tests into the CI/CD workflow, along with code coverage and vulnerability scans for safer releases.
+
+- **ElasticSearch Integration:**  
+  Incorporate ElasticSearch for advanced full-text search capabilities, improving user experience when exploring blog content.
+
+- **Social Login Functionality:**  
+  Enable seamless registration and sign-in using OAuth providers like Google, GitHub, etc., allowing users to access the platform with their existing accounts.
+
+- **Image/Media Upload:**  
+  Allow users to attach images or files to blog posts, integrating AWS S3 (or similar service) for efficient media storage and retrieval.
+
+- **Real-Time Notifications:**  
+  Implement a notification system (such as WebSockets) to alert users of new comments, replies, or updates related to their posts in real time.
+
+---
+
+These features are planned for future releases and will address common user and contributor needs, paving the way for a more interactive and scalable platform.
 
 
 
