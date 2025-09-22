@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blog-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: blog-service
+  template:
+    metadata:
+      labels:
+        app: blog-service
+    spec:
+      containers:
+      - name: blog-service
+        image:  890742604540.dkr.ecr.us-east-2.amazonaws.com/blog-service:v3
+        ports:
+        - containerPort: 8080
+

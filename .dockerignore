@@ -1,6 +1,7 @@
 target/
-*.iml
+.gradle/
+.idea/
+.vscode/
 *.log
-*.idea
-*.md
-Dockerfile
+*.iml
+.DS_Store

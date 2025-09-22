@@ -1,0 +1,67 @@
+version: "3.9"
+
+services:
+  postgres-db:
+    image: postgres:15
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgre
+      POSTGRES_DB: blogdb
+    ports:
+      - "5432:5432"
+    networks:
+      - blog-net
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  blog-redis:
+    image: redis:7
+    container_name: blog-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - blog-net
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+  blog-service:
+    build: .
+    container_name: blog-service
+    restart: always
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      blog-redis:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/blogdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgre
+      SPRING_REDIS_HOST: blog-redis
+      SPRING_REDIS_PORT: 6379
+    ports:
+      - "8080:8080"
+    networks:
+      - blog-net
+
+networks:
+  blog-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:

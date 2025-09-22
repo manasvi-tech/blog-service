@@ -1,14 +1,17 @@
-# Use OpenJDK 17 as the base image
-FROM openjdk:17-jdk-slim
-
-# Set the working directory
+# Step 1: Build
+FROM eclipse-temurin:17-jdk-alpine AS build
 WORKDIR /app
+COPY .mvn/ .mvn
+COPY mvnw .
+COPY pom.xml .
+COPY src src
+RUN chmod +x mvnw
+RUN ./mvnw package -DskipTests
 
-# Copy the Maven build artifact
-COPY target/blog-service-0.0.1-SNAPSHOT.jar app.jar
 
-# Expose port 8080
+# Step 2: Run app with lightweight JRE
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-
-# Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
