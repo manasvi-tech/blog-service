@@ -1,7 +1,7 @@
 # Blog Backend API – Spring Boot + JPA + Docker + AWS + Kuberenetes (+ AI Summarization) 
 
 ## Objective
-A backend service with Spring Boot and JPA for full-featured blog CRUD, pagination, JWT, Redis caching, and AI-powered summarization. Production-ready for AWS (Docker+K8s).
+A backend service built with Spring Boot and JPA, offering comprehensive blog management with CRUD operations, efficient pagination, and secure access via JWT authentication. It supports fast data retrieval thanks to Redis caching and includes AI-based automatic summarization for blog content. Designed for smooth production deployment on AWS using Docker containers and Kubernetes orchestration, it’s flexible, scalable, and ready for cloud-native workloads.
 
 ## Features
 - Full Blog Management (CRUD)  
