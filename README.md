@@ -190,17 +190,24 @@ curl -X POST http://<LB_ENDPOINT>:8080/api/auth/login --json '{"username":"test"
 
 ## Blogs
 
+### Post Blog
 ![Post Blog](Demonstration/postBlog.png)
 
-![Get Blogs](Demonstration/getBlog.png)
+### Get Blogs
+![Get Blogs](Demonstration/getBlogs.png)
 
+### Delete Blog
 ![Delete Blogs](Demonstration/deleteBlog.png)
 
+### Summarize Blog
 ![Summarize Blog](Demonstration/summarizeBlog.png)
 
 ## Users
+
+### Signup User
 ![Signup User](Demonstration/userSignup.png)
 
+## Login User
 ![Login User](Demonstration/userLogin.png)
 
 
