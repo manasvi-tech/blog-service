@@ -11,6 +11,11 @@ A backend service built with Spring Boot and JPA, offering comprehensive blog ma
 - Ready for AWS: Docker deployable, S3 support optional  
 - JWT authentication, Redis caching
 
+## Live Demo
+```
+http://a8651cc9a6cba4e899a888daa16f026a-684981909.us-east-2.elb.amazonaws.com:8080/api/blogs?page=0&size=10
+```
+
 ## API Endpoints
 
 | Feature              | Method & Path                       | Request Body / Query                                                                                     | Description                                |
